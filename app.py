@@ -71,16 +71,20 @@ if st.session_state.login:
         
         client = OpenAI(api_key=api_key, base_url=base_url)
         with st.chat_message("assistant"):
-            response = client.chat.completions.create(
-                model=model,
-                messages=messages,
-                max_tokens=max_tokens,
-                temperature=temperature,
-                top_p=top_p,
-                frequency_penalty=frequency_penalty,
-                presence_penalty=presence_penalty,
-                stream=True)
-            result = st.write_stream(chunk.choices[0].delta.content for chunk in response if chunk.choices[0].delta.content is not None)
+            try:
+                response = client.chat.completions.create(
+                    model=model,
+                    messages=messages,
+                    max_tokens=max_tokens,
+                    temperature=temperature,
+                    top_p=top_p,
+                    frequency_penalty=frequency_penalty,
+                    presence_penalty=presence_penalty,
+                    stream=True)
+                result = st.write_stream(chunk.choices[0].delta.content for chunk in response if chunk.choices[0].delta.content is not None)
+            except Exception as e:
+                result = f"**Error**:\n\n{e}"
+                st.markdown(result)
             st.session_state.msg.append({"role": "assistant", "content": result})
         
         st.rerun()
