@@ -83,7 +83,7 @@ if st.session_state.login:
                     stream=True)
                 result = st.write_stream(chunk.choices[0].delta.content for chunk in response if chunk.choices[0].delta.content is not None)
             except Exception as e:
-                result = f"**Error**:\n\n{e}"
+                result = f"**Error**:\n\n```plain text\n{e}\n```"
                 st.markdown(result)
             st.session_state.msg.append({"role": "assistant", "content": result})
         
